@@ -1,5 +1,5 @@
 package com.knoldus.piyush
 
-class Employee(val name:String,val age:Int,val salary:Int) 
+case class Employee(name: String, age: Int, salary: Int) 
 
 
