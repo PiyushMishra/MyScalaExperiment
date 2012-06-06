@@ -1,6 +1,6 @@
 package com.knoldus.piyush
 
-object EmployeeServiceApp extends App {
+object EmployeeServiceApp extends App  {
   val MyEmployees: List[Employee] = getEmployees
   val EmployeeService = new EmployeeService
 

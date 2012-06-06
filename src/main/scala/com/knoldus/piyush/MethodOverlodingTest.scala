@@ -1,21 +1,23 @@
 package com.knoldus.piyush
 
 class MethodOverlodingTest {
-  def calculate(x: Int) = { println(x) }
-  def calculate(s: String) = { println(s) }
+  def calculate(x: Int,y:String) = { println(x + y) }
+  def calculate(s: String):String = s
   def calculate(y: Float) = { println(y) }
 }
 
 object MethodOverlodingTest extends App {
   val m = new MethodOverlodingTest()
-  m.calculate("I m from Overloding")
-  m.calculate(10)
+ println( m.calculate("I m from Overloding"))
+  m calculate(10)
+  
+  m calculate(10,"string")
   val mo = new MethodOverriding()
-  mo.calculate("i m from method overriding")
+  println(mo.calculate("i m from method overriding"))
 }
 
 class MethodOverriding extends MethodOverlodingTest {
 
-  override def calculate(s: String) = { println(s) }
+  override def calculate(s: String):String =s+"neel"
 
 }
