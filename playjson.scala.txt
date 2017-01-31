@@ -1,0 +1,34 @@
+@(beans: List[org.vz.datasci.Bean])
+package com.vz.datasci
+
+object TestJson extends App {
+   import org.vz.datasci
+   import scala.collection.mutable.ListBuffer
+   import play.api.libs.json._
+   import play.api.libs.functional.syntax._
+
+  @for(bean <- beans) {
+
+  case class @(bean.name)(@for((field, index) <- bean.fields.zipWithIndex){@field.name: @field.dataType @if(index < bean.fields.size -1) {,}})
+  @if(bean.fields.size == 1) {
+  implicit object @bean.name extends Writes[@bean.name]{
+    implicit def writes(@bean.name.toLowerCase: @bean.name) = Json.obj(@for(field <- bean.fields){
+    "@field.name" -> @bean.name.toLowerCase.@field.name})
+   implicit val reads:Reads[@bean.name] = (__ \ "@bean.fields.head.name").read[@bean.fields.head.dataType].map(@{bean.name}.apply)       
+   }
+   }
+
+  @if(bean.fields.size != 1) {
+   implicit object @(bean.name) {
+   
+     implicit def writes: Writes[@bean.name] = (@for((field, index) <- bean.fields.zipWithIndex){@if(field.dataType.startsWith("Option")){(__ \ "@field.name").writeNullable@(field.dataType.replaceAll("Option", ""))} else {
+     (__ \ "@field.name").write[@field.dataType]} @if(index < bean.fields.size -1) {and#newline}})(unlift(@(bean.name).unapply _))
+  
+    implicit def reads: Reads[@bean.name] = (@for((field, index) <- bean.fields.zipWithIndex){
+     @if(field.dataType.startsWith("Option")){(__ \ "@field.name").readNullable@(field.dataType.replaceAll("Option", "")) @if(index < bean.fields.size -1) {and#newline}}
+      @if(!field.dataType.startsWith("Option")) {(__ \ "@field.name").read[@field.dataType] @if(index < bean.fields.size -1) {and#newline}}})(@(bean.name).apply _)
+   }
+  }
+}
+}
+		
